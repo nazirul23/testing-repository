@@ -37,7 +37,7 @@ git pull
 git checkout -b "$RELEASE_BRANCH" production
 
 # Merge main into release
-gh pr merge main --merge --auto
+git merge --strategy-option=theirs main
 
 # Create an annotated tag
 git tag -a "$TAG_NAME" -m "Release $TAG_NAME"
