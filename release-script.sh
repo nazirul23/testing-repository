@@ -18,23 +18,32 @@ if [ -z "$TAG_NAME" ]; then
     exit 1
 fi
 
+read -p "Enter the pr title: " PR_TITLE
+
+if [ -z "$PR_TITLE" ]; then
+    echo "Error: PR title cannot be empty."
+    exit 1
+fi
+
+read -p "Enter the pr description: " PR_BODY
+
 # Switch to production branch and create release branch
 git checkout production
 git pull
 git checkout -b "$RELEASE_BRANCH" production
 
-# Merge master into release
-git merge --strategy-option=theirs main
+# Merge main into release
+gh pr checkout main
+gh pr merge --auto
 
 # Create an annotated tag
 git tag -a "$TAG_NAME" -m "Release $TAG_NAME"
 
 # Push branch and tag
-git push origin "$RELEASE_BRANCH"
+git push --set-upstream origin "$RELEASE_BRANCH"
 git push --tags
 
-# Create pull request
-PR_URL="https://github.com/nazirul23/testing-repository/compare/production...$RELEASE_BRANCH?expand=1"
-echo "Create a pull request at: $PR_URL"
+# Create pull request using GitHub CLI
+gh pr create --base production --head "$RELEASE_BRANCH" --title "$PR_TITLE" --body "$PR_BODY"
 
 echo "Run dep deploy to deploy to production."
