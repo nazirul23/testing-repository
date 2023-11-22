@@ -42,7 +42,7 @@ if [ -z "$CHERRY_PICK_COMMITS" ]; then
     # Merge main into release
     git merge --strategy-option=theirs main
 else
-    git cherry-pick -x $CHERRY_PICK_COMMITS
+    git cherry-pick -x --strategy-option=theirs $CHERRY_PICK_COMMITS
 fi
 
 # Create an annotated tag
