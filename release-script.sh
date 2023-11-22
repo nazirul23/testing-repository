@@ -27,6 +27,8 @@ fi
 
 read -p "Enter the pr description: " PR_BODY
 
+read -p "Enter the cherry pick commits (press enter if full release): " CHERRY_PICK_COMMITS
+
 # Switch to main branch and fetch latest
 git checkout main
 git pull
@@ -36,8 +38,12 @@ git checkout production
 git pull
 git checkout -b "$RELEASE_BRANCH" production
 
-# Merge main into release
-git merge --strategy-option=theirs main
+if [ -z "$CHERRY_PICK_COMMITS" ]; then
+    # Merge main into release
+    git merge --strategy-option=theirs main
+else
+    git cherry-pick -x $CHERRY_PICK_COMMITS
+fi
 
 # Create an annotated tag
 git tag -a "$TAG_NAME" -m "Release $TAG_NAME"
