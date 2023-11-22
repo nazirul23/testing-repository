@@ -33,8 +33,7 @@ git pull
 git checkout -b "$RELEASE_BRANCH" production
 
 # Merge main into release
-gh pr checkout main
-gh pr merge --auto
+gh pr merge main --merge --auto
 
 # Create an annotated tag
 git tag -a "$TAG_NAME" -m "Release $TAG_NAME"
