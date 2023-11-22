@@ -27,6 +27,10 @@ fi
 
 read -p "Enter the pr description: " PR_BODY
 
+# Switch to main branch and fetch latest
+git checkout main
+git pull
+
 # Switch to production branch and create release branch
 git checkout production
 git pull
